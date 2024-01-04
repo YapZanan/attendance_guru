@@ -14,6 +14,9 @@ class UserCalendarScreen extends StatefulWidget {
 }
 
 class _UserCalendarScreenState extends State<UserCalendarScreen> {
+
+  String monthYear = DateFormat('MMMM/yyyy').format(DateTime.now());
+
   // Initialize an empty list to store records
   List<Map<String, dynamic>> records = [];
 
@@ -82,47 +85,13 @@ class _UserCalendarScreenState extends State<UserCalendarScreen> {
                 ),
               ),
             ),
-            Stack(
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(
-                    top: Margins.xl,
-                  ),
-                  child: Text(
-                    DateFormat('MMMM/yyyy').format(DateTime.now()),
-                    style: const TextStyle(
-                      fontSize: FontSizes.lg,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.text,
-                    ),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  margin: const EdgeInsets.only(
-                    top: Margins.xl,
-                  ),
-                  child: const Text(
-                    "Pilih Bulan",
-                    style: TextStyle(
-                      fontSize: FontSizes.lg,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.text,
-                    ),
-                  ),
-                ),
-              ],
-            ),
             const SizedBox(
               height: 20,
             ),
             // Use ListView.builder to dynamically create ComponentCheckInOut widgets
             ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: records.length,
               itemBuilder: (context, index) {
                 return ComponentCheckInOut(
