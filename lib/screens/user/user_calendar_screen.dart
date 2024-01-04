@@ -1,4 +1,5 @@
 // Import necessary libraries and files
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,18 +7,9 @@ import '../../components/component_check_in_out.dart';
 import '../../constant.dart';
 import '../../model/user_model.dart';
 
-class UserCalendarScreen extends StatefulWidget {
-  const UserCalendarScreen({Key? key}) : super(key: key);
-
-  @override
-  State<UserCalendarScreen> createState() => _UserCalendarScreenState();
-}
-
-class _UserCalendarScreenState extends State<UserCalendarScreen> {
-
+// Separate class for the state
+class UserCalendarScreenState extends State<UserCalendarScreen> {
   String monthYear = DateFormat('MMMM/yyyy').format(DateTime.now());
-
-  // Initialize an empty list to store records
   List<Map<String, dynamic>> records = [];
 
   // Function to fetch records from Firebase
@@ -51,8 +43,17 @@ class _UserCalendarScreenState extends State<UserCalendarScreen> {
       // Update the state to rebuild the widget with the new records
       setState(() {});
     } catch (e) {
-      print("Error getting records: $e");
+      if (kDebugMode) {
+        print("Error getting records: $e");
+      }
     }
+  }
+
+  // Function to refresh the widget
+  Future<void> refresh() async {
+    // You can add any additional logic you need for refreshing here
+    // For example, you can re-fetch records
+    await fetchRecords();
   }
 
   @override
@@ -106,7 +107,7 @@ class _UserCalendarScreenState extends State<UserCalendarScreen> {
                     color: AppColors.text,
                   ),
                   yes: true,
-                  timeStamp: records[index]["formattedDate"], // Use the formatted date here
+                  timeStamp: records[index]["formattedDate"],
                 );
               },
             ),
@@ -115,4 +116,12 @@ class _UserCalendarScreenState extends State<UserCalendarScreen> {
       ),
     );
   }
+}
+
+class UserCalendarScreen extends StatefulWidget {
+  // Define a key to access the state of this widget
+  const UserCalendarScreen({Key? key}) : super(key: key);
+
+  @override
+  State<UserCalendarScreen> createState() => UserCalendarScreenState();
 }

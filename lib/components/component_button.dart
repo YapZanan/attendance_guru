@@ -4,10 +4,12 @@ import '../constant.dart';
 class ComponentFilledButton extends StatelessWidget {
   final VoidCallback onPressed;
   final VoidCallback? onLongPress;
+  final String? textBaru;
 
   const ComponentFilledButton({
     required this.onPressed,
     this.onLongPress,
+    this.textBaru,
     Key? key,
   }) : super(key: key);
 
@@ -21,9 +23,9 @@ class ComponentFilledButton extends StatelessWidget {
         backgroundColor: AppColors.primary,
         minimumSize: const Size(double.maxFinite, 50),
       ),
-      child: const Text(
-        DefaultText.signIn,
-        style: TextStyle(
+      child: Text(
+        textBaru ?? DefaultText.signIn,
+        style: const TextStyle(
           color: Colors.white,
           fontSize: FontSizes.xl,
           fontStyle: FontStyle.normal,

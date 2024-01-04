@@ -38,20 +38,25 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
     super.initState();
     getTime.startUpdatingTime();
     getYear.startUpdatingTime();
-    _getState();
+    // _getState();
     _getTime();
     // _getUserTime("checkIn", jamMasukUser);
     // _getUserTime();
     _getUserTime("checkIn").then((value) {
       setState(() {
         jamMasukUser = value ?? "--/--/--";
-        isCheckIn = value != null ? false : true;
+        print(jamMasukUser);
+        isCheckIn = jamMasukUser == "--/--/--" && jamKeluarUser == "--/--/--" ? true : false;
+        print(isCheckIn);
+
       });
     });
     _getUserTime("checkOut").then((value) {
       setState(() {
         jamKeluarUser = value ?? "--/--/--";
-        isCheckIn = value != null ? true : false;
+        // isCheckIn = jamKeluarUser == "--/--/--" ? true : false;
+        isDisabled = jamKeluarUser == "--/--/--" ? false : true;
+
       });
     });
   }
@@ -94,32 +99,36 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
     }
   }
 
-  void _getState() async {
-    DocumentSnapshot snap2 = await FirebaseFirestore.instance
-        .collection("Karyawan")
-        .doc(UserTest.userID)
-        .collection("Record")
-        .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()))
-        .get();
-    try{
-      String checkIn = (snap2['checkIn']);//gagal
-      setState(() {
-        isCheckIn = false;
-      });
-      try{
-        String checkIn = (snap2['checkOut']);//gagal
-        setState(() {
-          isDisabled = true;
-        });
-      }catch(e){
-      }
-    }catch(e){ //gaada checkIn
-      setState(() {
-        isCheckIn = true;
-        isDisabled = false;
-      });
-    }
-  }
+  // void _getState() async {
+  //   DocumentSnapshot snap2 = await FirebaseFirestore.instance
+  //       .collection("Karyawan")
+  //       .doc(UserTest.userID)
+  //       .collection("Record")
+  //       .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()))
+  //       .get();
+  //   try{
+  //     String checkIn = (snap2['checkIn']);//gagal
+  //     print("ada checkIn");
+  //     setState(() {
+  //       isCheckIn = true;
+  //     });
+  //     try{
+  //       String checkIn = (snap2['checkOut']);//gagal
+  //       print("ada checkOut");
+  //       setState(() {
+  //         // isDisabled = false;
+  //       });
+  //     }catch(e){
+  //       print("gaada checkOut");
+  //     }
+  //   }catch(e){ //gaada checkIn
+  //     print("gaada checkIn checkOut");
+  //     setState(() {
+  //       // isCheckIn = false;
+  //       // isDisabled = false;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -237,6 +246,8 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
                       setState(() {
                         jamMasukUser = DateFormat('HH:mm:ss').format(DateTime.now());
                       });
+
+
                     }
                   // } else {
                   //   // Check-out logic

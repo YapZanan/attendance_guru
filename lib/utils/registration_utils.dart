@@ -42,23 +42,24 @@ class RegistrationUtils {
 
       // Register the user if email is not already in use
       DocumentReference userRef = await FirebaseFirestore.instance.collection(collectionName).add({
-        'username': username,
+        'userName': username,
         'email': email,
         'password': password,
+        'role': 'karyawan'
         // Add other user data as needed
       });
 
-      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-      sharedPreferences.setString("userID", userRef.id);
-      sharedPreferences.setString("userRole", "user");
-      sharedPreferences.setString("userName", username);
-      sharedPreferences.setString("email", email);
-
-      UserTest.userID = userRef.id;
-      UserTest.role = "user";
-      UserTest.userName = username;
-      UserTest.email = email;
+      // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      //
+      // sharedPreferences.setString("userID", userRef.id);
+      // sharedPreferences.setString("userRole", "user");
+      // sharedPreferences.setString("userName", username);
+      // sharedPreferences.setString("email", email);
+      //
+      // UserTest.userID = userRef.id;
+      // UserTest.role = "user";
+      // UserTest.userName = username;
+      // UserTest.email = email;
 
       NavigationUtils.pushReplacement(
         currentContext,

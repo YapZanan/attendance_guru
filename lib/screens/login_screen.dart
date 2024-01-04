@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 ComponentInputField(
-                  icon: Icons.person,
+                  icon: Icons.mail_outline,
                   hintText: "Email",
                   screenWidth: screenWidth,
                   obscureText: false,
@@ -153,29 +153,31 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           const Spacer(),
-          // Container(
-          //   alignment: Alignment.bottomCenter,
-          //   padding: const EdgeInsets.only(bottom: Margins.xl),
-          //   child: ComponentRichText(
-          //     text: 'Belum Punya Akun? ',
-          //     clickableText: 'Klik Di sini',
-          //     onPressed: () {
-          //       NavigationUtils.pushScreen(
-          //           context, const CreateAccountScreen());
-          //     },
-          //     textStyle: const TextStyle(
-          //         color: Colors.black,
-          //         fontFamily: 'Montserrat',
-          //         fontWeight: FontWeight.w600,
-          //         fontSize: FontSizes.md),
-          //     clickableTextStyle: const TextStyle(
-          //       color: Colors.blue,
-          //       fontFamily: 'Montserrat',
-          //       fontWeight: FontWeight.w400,
-          //       decoration: TextDecoration.underline,
-          //     ),
-          //   ),
-          // ),
+          Container(
+            alignment: Alignment.bottomCenter,
+            padding: const EdgeInsets.only(bottom: Margins.xl),
+            child: ComponentRichText(
+              text: 'Belum Punya Akun? ',
+              clickableText: 'Klik Di sini',
+              onPressed: () {
+                NavigationUtils.pushScreen(
+                    context, const KeyboardVisibilityProvider(child: CreateAccountScreen(),
+                )
+                );
+              },
+              textStyle: const TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600,
+                  fontSize: FontSizes.md),
+              clickableTextStyle: const TextStyle(
+                color: Colors.blue,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w400,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
         ],
       ),
     );

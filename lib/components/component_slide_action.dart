@@ -26,7 +26,7 @@ class ComponentSlideAction extends StatelessWidget {
       text: isCheckIn ? textIn : textOut,
       enabled: isDisabled,
       textStyle: TextStyle(
-        fontSize: FontSizes.lg,
+        fontSize: FontSizes.md,
         fontFamily: 'Montserrat',
         fontWeight: FontWeight.w600,
         color: !isDisabled ? Colors.grey : Colors.white, // Change color if disabled
