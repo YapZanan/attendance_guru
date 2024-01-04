@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1076578548856",
+    "project_id": "presensiguru-41ee9",
+    "firebase_url": "https://presensiguru-41ee9-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "storage_bucket": "presensiguru-41ee9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076578548856:android:5e60ef156500d804ac418d",
+        "android_client_info": {
+          "package_name": "com.kerjapraktek.attendanceguru.attendance_guru"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQEtaN2T_RvhBrD7MKa6x0Ca_aDj_t4dA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
