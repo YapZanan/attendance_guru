@@ -38,10 +38,7 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
     super.initState();
     getTime.startUpdatingTime();
     getYear.startUpdatingTime();
-    // _getState();
     _getTime();
-    // _getUserTime("checkIn", jamMasukUser);
-    // _getUserTime();
     _getUserTime("checkIn").then((value) {
       setState(() {
         jamMasukUser = value ?? "--/--/--";
@@ -54,7 +51,6 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
     _getUserTime("checkOut").then((value) {
       setState(() {
         jamKeluarUser = value ?? "--/--/--";
-        // isCheckIn = jamKeluarUser == "--/--/--" ? true : false;
         isDisabled = jamKeluarUser == "--/--/--" ? false : true;
 
       });
@@ -98,37 +94,6 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
       });
     }
   }
-
-  // void _getState() async {
-  //   DocumentSnapshot snap2 = await FirebaseFirestore.instance
-  //       .collection("Karyawan")
-  //       .doc(UserTest.userID)
-  //       .collection("Record")
-  //       .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()))
-  //       .get();
-  //   try{
-  //     String checkIn = (snap2['checkIn']);//gagal
-  //     print("ada checkIn");
-  //     setState(() {
-  //       isCheckIn = true;
-  //     });
-  //     try{
-  //       String checkIn = (snap2['checkOut']);//gagal
-  //       print("ada checkOut");
-  //       setState(() {
-  //         // isDisabled = false;
-  //       });
-  //     }catch(e){
-  //       print("gaada checkOut");
-  //     }
-  //   }catch(e){ //gaada checkIn
-  //     print("gaada checkIn checkOut");
-  //     setState(() {
-  //       // isCheckIn = false;
-  //       // isDisabled = false;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -191,10 +156,7 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
                 isCheckIn: isCheckIn,
                 isDisabled: !isDisabled,
                 onSlide: () async {
-                  // Get the current time
                   String jamNow = DateFormat('HH:mm:ss').format(DateTime.now());
-
-                  // Check if it's time to check-in
                   if (isCheckIn && jamNow.compareTo(jamMasuk) < 0) {
                     // Show SnackBar "Belum waktunya CheckIn"
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -204,10 +166,7 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
                     );
                     return;
                   }
-                  //
-                  // // Check if it's time to check-out
                   if (!isCheckIn && jamNow.compareTo(jamKeluar) < 0) {
-                    // Show SnackBar "Belum waktunya CheckOut"
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Belum waktunya CheckOut', textAlign: TextAlign.center,),
@@ -215,21 +174,14 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
                     );
                     return;
                   }
-                  // // Get the current document for the user and date
                   DocumentReference userRecordRef = FirebaseFirestore.instance
                       .collection("Karyawan")
                       .doc(UserTest.userID)
                       .collection("Record")
                       .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()));
 
-
-
-                  // Check if the user has already checked in
                   DocumentSnapshot userRecordSnapshot = await userRecordRef.get();
-
-                    // Check-in logic
                     try {
-                      // User has already checked in, update checkOut time
                       String checkIn = userRecordSnapshot['checkIn'];
                       await userRecordRef.update({
                         'checkOut': DateFormat('HH:mm:ss').format(DateTime.now()),
@@ -246,24 +198,7 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
                       setState(() {
                         jamMasukUser = DateFormat('HH:mm:ss').format(DateTime.now());
                       });
-
-
                     }
-                  // } else {
-                  //   // Check-out logic
-                  //   try {
-                  //     // User has already checked out, do nothing
-                  //   } catch (e) {
-                  //     // User hasn't checked out yet, show SnackBar
-                  //     ScaffoldMessenger.of(context).showSnackBar(
-                  //       const SnackBar(
-                  //         content: Text('Anda belum CheckIn', textAlign: TextAlign.center),
-                  //       ),
-                  //     );
-                  //     return;
-                  //   }
-                  // }
-                  // Update the UI state
                   setState(() {
                     isCheckIn = !isCheckIn;
                   });
@@ -276,7 +211,6 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
       ),
     );
   }
-
   @override
   void dispose() {
     // Dispose of resources when the widget is no longer needed
