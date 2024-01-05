@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,34 +33,47 @@ class AuthUtils {
           .where('email', isEqualTo: email)
           .get();
 
-      String passwordTemp = snap.docs.isNotEmpty ? snap.docs[0]['password'] : null;
+      if (snap.docs.isNotEmpty) {
+        String storedHashedPassword = snap.docs[0]['password'];
+        String storedSalt = snap.docs[0]['salt'];
 
-      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        // Combine entered password with stored salt
+        String combinedPassword = password + storedSalt;
 
-      if (passwordTemp != null && passwordTemp.trim() == password.trim()) {
-        String idTemp = snap.docs[0].id;
-        String roleTemp = snap.docs[0]['role'];
-        String userNameTemp = snap.docs[0]['userName'];
+        // Hash the combined password and salt
+        String enteredPasswordHash = hashPassword(combinedPassword);
 
-        sharedPreferences.setString("userID", idTemp);
-        sharedPreferences.setString("userRole", roleTemp);
-        sharedPreferences.setString("userName", userNameTemp);
-        sharedPreferences.setString("email", email);
+        // Compare the hashes
+        if (enteredPasswordHash == storedHashedPassword) {
+          String idTemp = snap.docs[0].id;
+          String roleTemp = snap.docs[0]['role'];
+          String userNameTemp = snap.docs[0]['userName'];
 
-        UserTest.userID = idTemp.toString();
-        UserTest.role = roleTemp.toString();
-        UserTest.userName = userNameTemp.toString();
-        UserTest.email = email.toString();
+          SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+          sharedPreferences.setString("userID", idTemp);
+          sharedPreferences.setString("userRole", roleTemp);
+          sharedPreferences.setString("userName", userNameTemp);
+          sharedPreferences.setString("email", email);
 
-        if (roleTemp == "admin") {
-          NavigationUtils.pushReplacement(
-            currentContext,
-            adminScreen,
-          );
-        } else if (roleTemp == "karyawan") {
-          NavigationUtils.pushReplacement(
-            currentContext,
-            userScreen,
+          UserTest.userID = idTemp.toString();
+          UserTest.role = roleTemp.toString();
+          UserTest.userName = userNameTemp.toString();
+          UserTest.email = email.toString();
+
+          if (roleTemp == "admin") {
+            NavigationUtils.pushReplacement(
+              currentContext,
+              adminScreen,
+            );
+          } else if (roleTemp == "karyawan") {
+            NavigationUtils.pushReplacement(
+              currentContext,
+              userScreen,
+            );
+          }
+        } else {
+          ScaffoldMessenger.of(currentContext).showSnackBar(
+            const SnackBar(content: Text("Email atau Password salah")),
           );
         }
       } else {
@@ -71,5 +86,12 @@ class AuthUtils {
         const SnackBar(content: Text("Email atau Password salah")),
       );
     }
+  }
+
+  // Function to hash the password using SHA-256
+  static String hashPassword(String password) {
+    var bytes = utf8.encode(password);
+    var digest = sha256.convert(bytes);
+    return digest.toString();
   }
 }

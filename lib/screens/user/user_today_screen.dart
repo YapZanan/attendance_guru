@@ -203,7 +203,6 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
                     isCheckIn = !isCheckIn;
                   });
                 },
-
               ),
             ),
           ],

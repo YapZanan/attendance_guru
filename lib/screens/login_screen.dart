@@ -1,6 +1,5 @@
 import 'package:attendance_guru/screens/create_account_screen.dart';
 import 'package:attendance_guru/screens/user/user_dashboard_screen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,7 +12,6 @@ import '../components/component_button.dart';
 import '../utils/auth_utils.dart';
 import '../utils/navigation_utils.dart';
 import 'admin/admin_dashboard.dart';
-import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

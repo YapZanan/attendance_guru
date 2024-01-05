@@ -1,5 +1,4 @@
 import 'package:attendance_guru/main.dart';
-import 'package:attendance_guru/utils/logOut.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

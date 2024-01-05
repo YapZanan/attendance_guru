@@ -3,13 +3,11 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../components/component_rich_text.dart';
 import '../constant.dart';
 import '../components/component_login_header.dart';
 import '../components/component_input_fields.dart';
 import '../components/component_button.dart';
 import '../utils/registration_utils.dart'; // Import the new registration utils
-import '../utils/navigation_utils.dart';
 import 'login_screen.dart';
 
 class CreateAccountScreen extends StatefulWidget {
@@ -107,6 +105,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ),
                 const SizedBox(height: Margins.lg),
                 ComponentFilledButton(
+                  textBaru: "Buat Akun",
                   onPressed: () {
                     // Call the RegistrationUtils.registerUser function here
                     RegistrationUtils.registerUser(

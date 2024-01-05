@@ -39,6 +39,7 @@ class ComponentSlideAction extends StatelessWidget {
         if (onSlide != null) {
           onSlide!();
         }
+        return null;
       },
     );
     onSlide

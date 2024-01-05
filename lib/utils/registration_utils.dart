@@ -1,8 +1,9 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../model/user_model.dart';
+import 'package:crypto/crypto.dart';
 import 'navigation_utils.dart';
 
 class RegistrationUtils {
@@ -40,14 +41,21 @@ class RegistrationUtils {
         return;
       }
 
+      String salt = generateSalt();
+
+      // Hash the password with the salt using SHA-256
+      String hashedPassword = hashPassword(password, salt);
+
       // Register the user if email is not already in use
       DocumentReference userRef = await FirebaseFirestore.instance.collection(collectionName).add({
         'userName': username,
         'email': email,
-        'password': password,
+        'password': hashedPassword,
+        'salt': salt,  // <-- Store the salt
         'role': 'karyawan'
         // Add other user data as needed
       });
+
 
       // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       //
@@ -70,5 +78,18 @@ class RegistrationUtils {
         const SnackBar(content: Text("Gagal melakukan registrasi")),
       );
     }
+  }
+
+  static String generateSalt() {
+    final random = Random.secure();
+    final List<int> saltBytes = List.generate(16, (index) => random.nextInt(255));
+    return base64UrlEncode(saltBytes);
+  }
+
+  // Function to hash the password with the salt using SHA-256
+  static String hashPassword(String password, String salt) {
+    var bytes = utf8.encode(password + salt);
+    var digest = sha256.convert(bytes);
+    return digest.toString();
   }
 }
