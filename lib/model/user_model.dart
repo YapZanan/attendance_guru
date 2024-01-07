@@ -4,5 +4,6 @@ class UserTest{
   static String password = "";
   static String userID = "";
   static String role = "";
+  static String photoURL = "";
 
 }

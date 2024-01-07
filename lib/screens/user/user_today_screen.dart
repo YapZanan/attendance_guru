@@ -1,7 +1,7 @@
+import 'package:attendance_guru/constant.dart';
 import 'package:attendance_guru/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:attendance_guru/constant.dart';
 import 'package:attendance_guru/utils/get_day.dart';
 import 'package:attendance_guru/utils/get_hours.dart';
 import 'package:intl/intl.dart';
@@ -14,13 +14,14 @@ import 'package:attendance_guru/components/component_time_display.dart';
 import 'package:attendance_guru/components/component_check_in_out.dart';
 
 class UserTodayScreen extends StatefulWidget {
-  const UserTodayScreen({super.key});
+  // Define a key to access the state of this widget
+  const UserTodayScreen({Key? key}) : super(key: key);
 
   @override
-  State<UserTodayScreen> createState() => _UserTodayScreenState();
+  State<UserTodayScreen> createState() => UserTodayScreenState();
 }
 
-class _UserTodayScreenState extends State<UserTodayScreen> {
+class UserTodayScreenState extends State<UserTodayScreen> {
   bool isCheckIn = true;
   bool isDisabled = false;
   bool isTime = true;
@@ -45,14 +46,12 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
         print(jamMasukUser);
         isCheckIn = jamMasukUser == "--/--/--" && jamKeluarUser == "--/--/--" ? true : false;
         print(isCheckIn);
-
       });
     });
     _getUserTime("checkOut").then((value) {
       setState(() {
         jamKeluarUser = value ?? "--/--/--";
         isDisabled = jamKeluarUser == "--/--/--" ? false : true;
-
       });
     });
   }
@@ -77,17 +76,17 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
     }
   }
 
-  void _getTime() async{
+  void _getTime() async {
     DocumentSnapshot snap2 = await FirebaseFirestore.instance
         .collection("Admin")
         .doc("jamKerja")
         .get();
-    try{
+    try {
       setState(() {
         jamMasuk = snap2['jamMasuk'];
         jamKeluar = snap2['jamKeluar'];
       });
-    }catch(e){
+    } catch (e) {
       setState(() {
         jamMasuk = "--/--/--";
         jamKeluar = "--/--/--";
@@ -103,29 +102,48 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
         padding: const EdgeInsets.all(Margins.lg),
         child: Column(
           children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              margin: const EdgeInsets.only(
-                top: Margins.xl,
-              ),
-              child: const Text(
-                "Selamat Datang,",
-                style: TextStyle(
-                  fontSize: FontSizes.lg,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w300,
-                  color: AppColors.text,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: const EdgeInsets.only(
+                        top: Margins.xl,
+                      ),
+                      child: const Text(
+                        "Selamat Datang,",
+                        style: TextStyle(
+                          fontSize: FontSizes.lg,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w300,
+                          color: AppColors.text,
+                        ),
+                      ),
+                    ),
+                    const ComponentUserInfo(),
+                  ],
                 ),
-              ),
+                Container(
+                  margin: const EdgeInsets.only(
+                    top: Margins.xl,
+                  ),
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(UserTest.photoURL),
+                  ),
+                ),
+              ],
             ),
-            const ComponentUserInfo(),
             const ComponentStatusInfo(textTitle: "Jadwal Hari Ini:"),
             ComponentCheckInOut(
                 checkInTitle: "Check-In",
                 checkOutTitle: "Check-Out",
                 checkInTime: jamMasuk,
                 checkOutTime: jamKeluar),
-            const ComponentStatusInfo(textTitle: "Presensi Anda:",),
+            const ComponentStatusInfo(textTitle: "Presensi Anda:"),
             ComponentCheckInOut(
                 checkInTitle: "Check-In",
                 checkOutTitle: "Check-Out",
@@ -146,9 +164,7 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
               child: ComponentTimeDisplay(timeStream: getTime.timeStream),
             ),
             Container(
-              padding: const EdgeInsets.only(
-                  top: Margins.lg
-              ),
+              padding: const EdgeInsets.only(top: Margins.lg),
               child: ComponentSlideAction(
                 slideActionKey: _slideActionKey,
                 textIn: "Geser Untuk Check-in",
@@ -158,7 +174,6 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
                 onSlide: () async {
                   String jamNow = DateFormat('HH:mm:ss').format(DateTime.now());
                   if (isCheckIn && jamNow.compareTo(jamMasuk) < 0) {
-                    // Show SnackBar "Belum waktunya CheckIn"
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Belum waktunya CheckIn', textAlign: TextAlign.center),
@@ -169,7 +184,7 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
                   if (!isCheckIn && jamNow.compareTo(jamKeluar) < 0) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Belum waktunya CheckOut', textAlign: TextAlign.center,),
+                        content: Text('Belum waktunya CheckOut', textAlign: TextAlign.center),
                       ),
                     );
                     return;
@@ -181,24 +196,23 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
                       .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()));
 
                   DocumentSnapshot userRecordSnapshot = await userRecordRef.get();
-                    try {
-                      String checkIn = userRecordSnapshot['checkIn'];
-                      await userRecordRef.update({
-                        'checkOut': DateFormat('HH:mm:ss').format(DateTime.now()),
-                      });
-                      setState(() {
-                        jamKeluarUser = DateFormat('HH:mm:ss').format(DateTime.now());
-                        isDisabled = true;
-                      });
-                    } catch (e) {
-                      // User hasn't checked in yet, set checkIn time
-                      await userRecordRef.set({
-                        'checkIn': DateFormat('HH:mm:ss').format(DateTime.now()),
-                      });
-                      setState(() {
-                        jamMasukUser = DateFormat('HH:mm:ss').format(DateTime.now());
-                      });
-                    }
+                  try {
+                    String checkIn = userRecordSnapshot['checkIn'];
+                    await userRecordRef.update({
+                      'checkOut': DateFormat('HH:mm:ss').format(DateTime.now()),
+                    });
+                    setState(() {
+                      jamKeluarUser = DateFormat('HH:mm:ss').format(DateTime.now());
+                      isDisabled = true;
+                    });
+                  } catch (e) {
+                    await userRecordRef.set({
+                      'checkIn': DateFormat('HH:mm:ss').format(DateTime.now()),
+                    });
+                    setState(() {
+                      jamMasukUser = DateFormat('HH:mm:ss').format(DateTime.now());
+                    });
+                  }
                   setState(() {
                     isCheckIn = !isCheckIn;
                   });
@@ -210,9 +224,9 @@ class _UserTodayScreenState extends State<UserTodayScreen> {
       ),
     );
   }
+
   @override
   void dispose() {
-    // Dispose of resources when the widget is no longer needed
     getTime.dispose();
     super.dispose();
   }

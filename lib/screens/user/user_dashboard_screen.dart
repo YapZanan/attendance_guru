@@ -13,7 +13,6 @@ class UserDashboardScreen extends StatefulWidget {
   State<UserDashboardScreen> createState() => _UserDashboardScreenState();
 }
 
-
 class _UserDashboardScreenState extends State<UserDashboardScreen> {
   double screenHeight = 0;
   double screenWidth = 0;
@@ -29,6 +28,9 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
   // GlobalKey to access the UserCalendarScreen state
   GlobalKey<UserCalendarScreenState> calendarKey = GlobalKey();
 
+  // GlobalKey to access the UserTodayScreen state
+  GlobalKey<UserTodayScreenState> todayKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
@@ -40,7 +42,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
         index: currentIndex,
         children: [
           UserCalendarScreen(key: calendarKey),
-          UserTodayScreen(),
+          UserTodayScreen(key: todayKey),
           UserProfileScreen(),
         ],
       ),

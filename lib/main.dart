@@ -1,6 +1,7 @@
 import 'package:attendance_guru/model/user_model.dart';
 import 'package:attendance_guru/screens/admin/admin_dashboard.dart';
 import 'package:attendance_guru/screens/user/user_dashboard_screen.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,6 +13,11 @@ import 'screens/login_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.debug,
+  );
+
+
   runApp(const MyApp());
 }
 
@@ -63,18 +69,21 @@ class _AuthCheckState extends State<AuthCheck> {
     var userName = sharedPreferences.getString('userName');
     var role = sharedPreferences.getString('userRole');
     var userID = sharedPreferences.getString('userID');
-    if (kDebugMode) {
-      print("email: $email");
-      print("username: $userName");
-      print("role: $role");
-      print("userID: $userID");
-    }
+    var photoURL = sharedPreferences.getString('photoURL');
+
+    print("email: $email");
+    print("username: $userName");
+    print("role: $role");
+    print("userID: $userID");
+    print("photoURL: $photoURL");
+
 
 
     try {
       if (email != null && email.isNotEmpty && role != null && role.isNotEmpty) {
         UserTest.userName = userName.toString();
         UserTest.userID = userID.toString();
+        UserTest.photoURL = photoURL.toString();
         print(UserTest.userID);
         print(UserTest.userName);
         setState(() {

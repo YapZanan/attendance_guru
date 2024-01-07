@@ -52,22 +52,10 @@ class RegistrationUtils {
         'email': email,
         'password': hashedPassword,
         'salt': salt,  // <-- Store the salt
-        'role': 'karyawan'
+        'role': 'karyawan',
+        'photoURL': 'https://firebasestorage.googleapis.com/v0/b/presensiguru-41ee9.appspot.com/o/default_profile.jpg?alt=media&token=fe42f0b2-00f7-4aef-8dfa-0b0c36c16a1a',
         // Add other user data as needed
       });
-
-
-      // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-      //
-      // sharedPreferences.setString("userID", userRef.id);
-      // sharedPreferences.setString("userRole", "user");
-      // sharedPreferences.setString("userName", username);
-      // sharedPreferences.setString("email", email);
-      //
-      // UserTest.userID = userRef.id;
-      // UserTest.role = "user";
-      // UserTest.userName = username;
-      // UserTest.email = email;
 
       NavigationUtils.pushReplacement(
         currentContext,

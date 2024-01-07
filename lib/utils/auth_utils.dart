@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,38 +38,34 @@ class AuthUtils {
         String storedHashedPassword = snap.docs[0]['password'];
         String storedSalt = snap.docs[0]['salt'];
 
-        // Combine entered password with stored salt
         String combinedPassword = password + storedSalt;
-
-        // Hash the combined password and salt
         String enteredPasswordHash = hashPassword(combinedPassword);
 
-        // Compare the hashes
         if (enteredPasswordHash == storedHashedPassword) {
           String idTemp = snap.docs[0].id;
           String roleTemp = snap.docs[0]['role'];
           String userNameTemp = snap.docs[0]['userName'];
+
+          // Retrieve the photoURL from Firebase Storage
+          String photoURL = await getPhotoURL(idTemp);
 
           SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
           sharedPreferences.setString("userID", idTemp);
           sharedPreferences.setString("userRole", roleTemp);
           sharedPreferences.setString("userName", userNameTemp);
           sharedPreferences.setString("email", email);
+          sharedPreferences.setString("photoURL", photoURL);
 
           UserTest.userID = idTemp.toString();
           UserTest.role = roleTemp.toString();
           UserTest.userName = userNameTemp.toString();
           UserTest.email = email.toString();
+          UserTest.photoURL = photoURL;
 
-          if (roleTemp == "admin") {
+          if (roleTemp == "admin" || roleTemp == "karyawan") {
             NavigationUtils.pushReplacement(
               currentContext,
-              adminScreen,
-            );
-          } else if (roleTemp == "karyawan") {
-            NavigationUtils.pushReplacement(
-              currentContext,
-              userScreen,
+              (roleTemp == "admin") ? adminScreen : userScreen,
             );
           }
         } else {
@@ -88,7 +85,18 @@ class AuthUtils {
     }
   }
 
-  // Function to hash the password using SHA-256
+  static Future<String> getPhotoURL(String userId) async {
+    try {
+      Reference storageReference = FirebaseStorage.instance.ref().child('$userId/default_profile.jpg');
+      String downloadURL = await storageReference.getDownloadURL();
+      print(downloadURL);
+      return downloadURL;
+    } catch (e) {
+      print("Error fetching photoURL: $e");
+      return 'https://firebasestorage.googleapis.com/v0/b/presensiguru-41ee9.appspot.com/o/default_profile.jpg?alt=media&token=fe42f0b2-00f7-4aef-8dfa-0b0c36c16a1a';
+    }
+  }
+
   static String hashPassword(String password) {
     var bytes = utf8.encode(password);
     var digest = sha256.convert(bytes);
