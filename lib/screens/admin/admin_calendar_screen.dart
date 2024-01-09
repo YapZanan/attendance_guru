@@ -10,10 +10,13 @@ import '../../model/user_model.dart';
 
 class AdminCalendarScreen extends StatefulWidget {
   final userID;
+  final name;
   // Define a key to access the state of this widget
   const AdminCalendarScreen({
     Key? key,
-    required this.userID}) : super(key: key);
+    required this.userID,
+    required this.name,
+  }) : super(key: key);
 
   @override
   State<AdminCalendarScreen> createState() => AdminCalendarScreenState();
@@ -46,7 +49,7 @@ class AdminCalendarScreenState extends State<AdminCalendarScreen> {
 
       for (var record in records) {
         DateTime dateTime = DateFormat('dd MMMM yyyy', 'en_US').parse(record["recordID"]);
-        String formattedDate = DateFormat('EE\ndd', 'en_US').format(dateTime);
+        String formattedDate = DateFormat('dd\nMMMM\nyyyy', 'en_US').format(dateTime);
 
         // Add the formatted date to the record
         record["formattedDate"] = formattedDate;
@@ -88,8 +91,8 @@ class AdminCalendarScreenState extends State<AdminCalendarScreen> {
               margin: const EdgeInsets.only(
                 top: Margins.xl,
               ),
-              child: const Text(
-                "Histori Presensi",
+              child: Text(
+                "Histori Presensi ${widget.name}",
                 style: TextStyle(
                   fontSize: FontSizes.xl,
                   fontFamily: 'Montserrat',

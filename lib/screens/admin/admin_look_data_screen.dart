@@ -28,11 +28,10 @@ class AdminLookDataState extends State<AdminLookDataScreen> {
     try {
       Reference storageReference = FirebaseStorage.instance.ref().child('$userId/default_profile.jpg');
       String downloadURL = await storageReference.getDownloadURL();
-      print("asdasdasdasd:");
       print(downloadURL);
       return downloadURL;
     } catch (e) {
-      print("Error fetching photoURL: $e");
+      // print("Error fetching photoURL: $e");
       return 'https://firebasestorage.googleapis.com/v0/b/presensiguru-41ee9.appspot.com/o/default_profile.jpg?alt=media&token=fe42f0b2-00f7-4aef-8dfa-0b0c36c16a1a';
     }
   }
@@ -53,10 +52,10 @@ class AdminLookDataState extends State<AdminLookDataScreen> {
         return data;
       }));
 
-      print(records);
+      // print(records);
       setState(() {});
     } catch (e) {
-      print("Error getting records: $e");
+      // print("Error getting records: $e");
     }
   }
 
@@ -75,7 +74,8 @@ class AdminLookDataState extends State<AdminLookDataScreen> {
                 return ComponentUserList(
                     name: records[index]["userName"],
                     userID: records[index]["userID"],
-                    email: "asdasdasd",
+                    email: records[index]["email"],
+                    role: records[index]["role"],
                     image: records[index]["photoURL"]);
               }
           )
