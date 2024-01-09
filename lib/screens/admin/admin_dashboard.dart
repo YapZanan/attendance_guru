@@ -1,3 +1,4 @@
+import 'package:attendance_guru/screens/admin/admin_look_data_screen.dart';
 import 'package:attendance_guru/screens/admin/admin_profile_screen.dart';
 import 'package:attendance_guru/screens/admin/admin_set_jam_screen.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +20,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   List<IconData> navigationIcons = [
     FontAwesomeIcons.solidClock,
+    FontAwesomeIcons.book,
     FontAwesomeIcons.userLarge,
   ];
 
-  int currentIndex = 0;
+  int currentIndex = 1;
+
+  GlobalKey<AdminLookDataState> lookDataKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         index: currentIndex,
         children: [
           new AdminSetJamScreen(),
+          new AdminLookDataScreen(key: lookDataKey),
           new AdminProfileScreen(),
+
         ],
       ),
       bottomNavigationBar: ComponentNavbar(
@@ -44,6 +50,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         currentIndex: currentIndex,
         navigationIcons: navigationIcons,
         onTabTapped: (index) {
+          if (index == 1) {
+            lookDataKey.currentState?.refresh();
+          }
           setState(() {
             currentIndex = index;
           });
